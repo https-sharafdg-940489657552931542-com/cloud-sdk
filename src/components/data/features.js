@@ -14,9 +14,9 @@ export const features = [
     name: '[SOAP](https://help.sap.com/saphelp_snc700_ehp01/helpdata/en/bb/ddb33d2ae46b3be10000000a114084/content.htm?no_cache=true)',
     category: 'Legacy',
     java: {
-      status: YES,
+      status: NO,
       docsLink: ``,
-      note: ''
+      note: 'Out of scope. Deprecated since 4.13.0'
     },
     js: {
       status: NO,
@@ -28,9 +28,9 @@ export const features = [
     name: '[BAPI](https://help.sap.com/doc/saphelp_nw73/7.3.16/en-US/4d/c89000ebfc5a9ee10000000a42189b/frameset.htm)',
     category: 'Legacy',
     java: {
-      status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/overview/)`,
-      note: ''
+      status: DEPRECATED,
+      docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/overview)`,
+      note: 'Deprecated since 4.13.0'
     },
     js: {
       status: NO,
@@ -42,9 +42,9 @@ export const features = [
     name: '[RFC](https://help.sap.com/doc/saphelp_nw73/7.3.16/en-US/48/9f1952a81417cee10000000a421937/frameset.htm)',
     category: 'Legacy',
     java: {
-      status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/overview/)`,
-      note: ''
+      status: DEPRECATED,
+      docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/overview)`,
+      note: 'Deprecated since 4.13.0'
     },
     js: {
       status: NO,
@@ -62,7 +62,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/odata/use-odata-v2-type-safe-client-for-javascript-typescript)`,
+      docsLink: `[docs](${baseUrl}/js/features/odata/v2-client)`,
       note: ''
     }
   },
@@ -76,7 +76,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/odata/use-odata-v4-type-safe-client-for-javascript-typescript)`,
+      docsLink: `[docs](${baseUrl}/js/features/odata/v4-client)`,
       note: ''
     }
   },
@@ -91,7 +91,7 @@ export const features = [
     js: {
       status: NO,
       docsLink: ``,
-      note: `We expose [generic HTTP client](${baseUrl}/js/features/connectivity/generic-http-client) aware of connectivity abstractions`
+      note: `We expose [generic HTTP client](${baseUrl}/js/features/connectivity/http-client) aware of connectivity abstractions`
     }
   },
   {
@@ -104,7 +104,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/odata/generate-odata-client)`,
+      docsLink: `[docs](${baseUrl}/js/features/odata/generate-client)`,
       note: ''
     }
   },
@@ -118,7 +118,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/openapi/execute-openapi-request)`,
+      docsLink: `[docs](${baseUrl}/js/features/openapi/execute-request)`,
       note: ''
     }
   },
@@ -132,7 +132,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/openapi/execute-openapi-request)`,
+      docsLink: `[docs](${baseUrl}/js/features/openapi/execute-request)`,
       note: ''
     }
   },
@@ -146,7 +146,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/openapi/generate-openapi-client)`,
+      docsLink: `[docs](${baseUrl}/js/features/openapi/generate-client)`,
       note: ''
     }
   },
@@ -154,14 +154,14 @@ export const features = [
     name: 'Enterprise messaging',
     category: 'Messaging',
     java: {
-      status: PLANNED,
+      status: NO,
       docsLink: ``,
-      note: 'Planned. Depends on CAP'
+      note: ''
     },
     js: {
-      status: PLANNED,
+      status: NO,
       docsLink: ``,
-      note: 'Planned. Depends on CAP'
+      note: ''
     }
   },
   {
@@ -169,13 +169,13 @@ export const features = [
     category: 'Advanced',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/resilience/resilience)`,
+      docsLink: `[docs](${baseUrl}/java/features/resilience)`,
       note: ''
     },
     js: {
-      status: NO,
-      docsLink: ``,
-      note: FEATURE_REQUEST
+      status: YES,
+      docsLink: `[docs](${baseUrl}/js/guides/resilience)`,
+      note: ''
     }
   },
   {
@@ -183,13 +183,13 @@ export const features = [
     category: 'Advanced',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/resilience/resilience)`,
+      docsLink: `[docs](${baseUrl}/java/features/resilience)`,
       note: ''
     },
     js: {
-      status: NO,
-      docsLink: ``,
-      note: FEATURE_REQUEST
+      status: YES,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination-cache)`,
+      note: ''
     }
   },
   {
@@ -202,7 +202,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/getting-started#deploy-the-project-on-sap-btp-cloud-foundry)`,
+      docsLink: `[docs](${baseUrl}/js/getting-started)`,
       note: ''
     }
   },
@@ -216,7 +216,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/guides/migrate-sdk-application-from-btp-cf-to-kubernetes)`,
+      docsLink: `[docs](${baseUrl}/js/environments/kubernetes)`,
       note: ''
     }
   },
@@ -230,7 +230,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/getting-started#deploy-the-project-on-sap-btp-cloud-foundry)`,
+      docsLink: `[docs](${baseUrl}/js/environments/kyma)`,
       note: ''
     }
   },
@@ -245,21 +245,21 @@ export const features = [
     js: {
       status: NO,
       docsLink: ``,
-      note: FEATURE_REQUEST
+      note: ''
     }
   },
   {
     name: '[BTP Neo Environment](https://help.sap.com/viewer/ea72206b834e4ace9cd834feed6c0e09/Cloud/en-US)',
     category: 'Environment',
     java: {
-      status: YES,
+      status: NO,
       docsLink: ``,
-      note: `Not recommended for new projects`
+      note: 'Out of scope. Deprecated since 4.17.0'
     },
     js: {
       status: NO,
       docsLink: ``,
-      note: 'Not recommended for new projects'
+      note: 'Out of scope.'
     }
   },
   {
@@ -281,12 +281,12 @@ export const features = [
     category: 'Connectivity',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/connectivity/sdk-connectivity-destination-service)`,
+      docsLink: `[docs](${baseUrl}/java/features/connectivity/destination-service)`,
       note: ''
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination)`,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations)`,
       note: ''
     }
   },
@@ -300,7 +300,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination)`,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations)`,
       note: ''
     }
   },
@@ -314,7 +314,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination)`,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations)`,
       note: ''
     }
   },
@@ -342,7 +342,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination#authentication-and-json-web-token-retrievjal)`,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations#authentication-and-json-web-token-retrievjal)`,
       note: ''
     }
   },
@@ -356,7 +356,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination#multi-tenancy)`,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations#multi-tenancy)`,
       note: ''
     }
   },
@@ -370,7 +370,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination#multi-tenancy)`,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations#multi-tenancy)`,
       note: ''
     }
   },
@@ -384,7 +384,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/connectivity/generic-http-client)`,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/http-client)`,
       note: ''
     }
   },
@@ -407,7 +407,7 @@ export const features = [
     category: 'Connectivity',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/connectivity/-destination-service#connect-to-sap-s4hana-on-premise)`,
+      docsLink: `[docs](${baseUrl}/java/features/connectivity/destination-service#connect-to-sap-s4hana-on-premise)`,
       note: ''
     },
     js: {
@@ -417,31 +417,17 @@ export const features = [
     }
   },
   {
-    name: 'CLI',
-    category: 'CLI',
-    java: {
-      status: YES,
-      docsLink: ``,
-      note: `Via a Maven plugin `
-    },
-    js: {
-      status: DEPRECATED,
-      docsLink: `[docs](${baseUrl}/js/features/cli/overview)`,
-      note: ''
-    }
-  },
-  {
     name: 'MDI',
     category: 'MDI',
     java: {
-      status: YES,
+      status: NO,
       docsLink: ``,
-      note: `Internal only or allow listed`
+      note: 'Out of scope. Deprecated since 4.23.0'
     },
     js: {
       status: NO,
       docsLink: ``,
-      note: FEATURE_REQUEST
+      note: ''
     }
   }
 ];

@@ -59,7 +59,8 @@
         "guides/approuter",
         "guides/resilience",
         "guides/retrieve-jwt",
-        "guides/remote-debugging"
+        "guides/remote-debugging",
+        "guides/api-business-hub-download-specification"
       ]
     },
     {
@@ -96,6 +97,11 @@
       "type": "category",
       "label": "Video Tutorials",
       "items": ["video/calm"]
+    },
+    {
+      "type": "link",
+      "label": "API Reference",
+      "href": "pathname:///api/v2/index.html"
     },
     "release-notes",
     "support",

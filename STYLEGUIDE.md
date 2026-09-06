@@ -4,6 +4,8 @@ This guide is based on [Google's style guide](https://developers.google.com/styl
 
 ## Table of Contents
 
+- [Style Guide](#style-guide)
+  - [Table of Contents](#table-of-contents)
 - [Formatting](#formatting)
   - [Inline Code](#inline-code)
     - [Use Code Font](#use-code-font)
@@ -21,7 +23,7 @@ This guide is based on [Google's style guide](https://developers.google.com/styl
     - [Use Ordinary Font for URLs that Reader Should Follow in a Browser](#use-ordinary-font-for-urls-that-reader-should-follow-in-a-browser)
   - [Use `example.com` for Example Domain](#use-examplecom-for-example-domain)
   - [Filenames and File Paths](#filenames-and-file-paths)
-    - [Use Code Font](#use-code-font)
+    - [Use Code Font](#use-code-font-1)
     - [Include the Word File After the Filename](#include-the-word-file-after-the-filename)
     - [Prefer Hyphens, Not Underscores, To Separate Words in File Paths](#prefer-hyphens-not-underscores-to-separate-words-in-file-paths)
     - [Use Linux File Paths and Separators by Default](#use-linux-file-paths-and-separators-by-default)
@@ -47,12 +49,11 @@ This guide is based on [Google's style guide](https://developers.google.com/styl
   - [Use Active Voice Over Passive](#use-active-voice-over-passive)
   - [Exceptions: Use Passive Voice](#exceptions-use-passive-voice)
   - [First Person](#first-person)
-    - [Avoid Using `We`](#avoid-using-we)
-    - [Avoid Using `Our`](#avoid-using-our)
+    - [Avoid Using `We`, `Our`, and `Us`](#avoid-using-we-our-and-us)
     - [Exception: The Questions in FAQs](#exception-the-questions-in-faqs)
   - [Second Person](#second-person)
     - [Use the Imperative Form in Instructions](#use-the-imperative-form-in-instructions)
-    - [Avoid Using `Your`](#avoid-using-your)
+    - [Don't Overuse `Your`](#dont-overuse-your)
     - [Don't Use `We` or `Our` When Addressing the Reader (You)](#dont-use-we-or-our-when-addressing-the-reader-you)
   - [Politeness](#politeness)
     - [Don’t Use `Please` in Instructions](#dont-use-please-in-instructions)
@@ -71,8 +72,14 @@ This guide is based on [Google's style guide](https://developers.google.com/styl
     - [Use Numbered List for Steps To Be Performed in Order](#use-numbered-list-for-steps-to-be-performed-in-order)
     - [Use Description List With Headings for Describing Terms](#use-description-list-with-headings-for-describing-terms)
       - [Exception: Capital Letter](#exception-capital-letter)
-- [SEO](#search-engine-optimization)
-  - [Slugs](#Slugs)
+- [Search Engine Optimization](#search-engine-optimization)
+  - [Slugs](#slugs)
+    - [Do not include base path in the slug](#do-not-include-base-path-in-the-slug)
+    - [Include Keywords](#include-keywords)
+    - [Use Function Words](#use-function-words)
+    - [Keep It Short](#keep-it-short)
+    - [Use Lowercase Letters](#use-lowercase-letters)
+    - [Reference Files By Their Path, Not Their Slug](#reference-files-by-their-path-not-their-slug)
 
 # Formatting
 
@@ -227,11 +234,17 @@ For generic domain name in examples, use `example.com`.
 
 ❌ Replace the default tsconfig.json
 
-✅ Replace the default `tsconfig.json`
+✅ Replace the default `tsconfig.json` file
 
 ### Include the Word File After the Filename
 
 ✅ Add your own `package.json` file.
+
+Unless the filename ends with a noun
+
+❌ Use a `Dockerfile` file
+
+✅ Use a `Dockerfile`
 
 ### Prefer Hyphens, Not Underscores, To Separate Words in File Paths
 
@@ -406,17 +419,15 @@ In certain cases, it's okay to use passive voice:
 
 In general, use second person rather than first person — you instead of we.
 
-### Avoid Using `We`
+### Avoid Using `We`, `Our`, and `Us`
 
 ❌ We do not guarantee any API compatibility for future updates
 
 ✅ The SAP Cloud SDK does not guarantee any API compatibility for future updates
 
-### Avoid Using `Our`
+❌ We need to add resilience to our application to protect us.
 
-❌ Check out our ETag section for more information.
-
-✅ Check out the ETag section for more information.
+✅ You need to add resilience to your application to protect yourself.
 
 ### Exception: The Questions in FAQs
 
@@ -432,7 +443,9 @@ When telling the reader to do something, use the imperative (implicit you).
 
 ✅ Create a simple application that uses the approuter
 
-### Avoid Using `Your`
+### Don't Overuse `Your`
+
+Often you can replace `your` with `the` or skip it.
 
 ❌ Deploy your application as usual by running the command:
 
@@ -753,7 +766,9 @@ id: frequently-asked-questions
 If you reference files by their path, e.g., `../my-file.mdx`, changes to the `id`, and therefore the slug, will automitcally carry over.
 Otherwise you would have to adjust the reference in all files that reference a specific slug.
 
-Therefore you should always reference other files by their (relative) path.
+Therefore you should always reference other files by their relative path.
+Note: Begin relative path with `./` or `../`.
+Not using this notation can result in an old versioned doc linking to the latest doc.
 
 ❌
 
@@ -761,10 +776,18 @@ Therefore you should always reference other files by their (relative) path.
 ... see our [JWT documentation](../retrieve-jwt)
 ```
 
+```
+... the concept of a [destination](features/connectivity/destination.mdx)
+```
+
 ✅
 
 ```
 ... see our [JWT documentation](../how-to-retrieve-jwt.mdx)
+```
+
+```
+... the concept of a [destination](./features/connectivity/destination.mdx)
 ```
 
 <!-- vale on -->

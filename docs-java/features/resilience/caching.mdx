@@ -33,7 +33,7 @@ We recommend [Caffeine](https://github.com/ben-manes/caffeine) which you can use
 <dependency>
     <groupId>com.github.ben-manes.caffeine</groupId>
     <artifactId>jcache</artifactId>
-    <version>2.8.5</version>
+    <version>3.1.8</version>
     <scope>runtime</scope>
 </dependency>
 ```
@@ -45,7 +45,7 @@ Otherwise, you will face a runtime exception.
 
 ### Creating a Cache Configuration
 
-As described in our [Resilience section](https://sap.github.io/cloud-sdk/docs/java/features/resilience/resilience) the SAP Cloud SDK allows you to run any code in the context of one or more resilience patterns.
+As described in our [Resilience section](/docs/java/features/resilience) the SAP Cloud SDK allows you to run any code in the context of one or more resilience patterns.
 Caching is also a resilience pattern, so you can leverage the same API to build and apply a `CacheConfiguration`.
 
 ```java
@@ -99,7 +99,7 @@ The cache configuration offers 3 options:
 1. Parameters (Optional)
 
 Each cache configuration must at least specify a duration after which a cache expires.
-How this timeout is applied can be configured through the [Expiration Strategy](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/CacheExpirationStrategy.html).
+How this timeout is applied can be configured through the [Expiration Strategy](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/resilience/CacheExpirationStrategy.html).
 By default, a cache entry is cleared once the configured duration has passed since the entry was created.
 
 Finally, parameters can be listed that further refine the caching functionality.
@@ -172,7 +172,7 @@ To still switch the isolation context, please refer to [the CAP documentation](h
 
 You can configure this isolation via the isolation mode of the resilience configuration.
 Set the isolation mode to `NO_ISOLATION` to disable tenant aware caching.
-See the section on isolation levels under [Resilience](https://sap.github.io/cloud-sdk/docs/java/features/resilience/resilience#multi-tenancy) for more details.
+See the section on isolation levels under [Resilience](/docs/java/features/resilience#multi-tenancy) for more details.
 
 ### Removing Cache Entries Manually
 

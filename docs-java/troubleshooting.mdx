@@ -36,16 +36,13 @@ Tenant or principal information is not available or an incorrect tenant is used.
 
 **Possible causes:**
 
-- A subscriber based JWT is passed in, but its validation fails, causing the SAP Cloud SDK to fall back to the provider account.
-  See [JWT validation fails](#json-web-token-validation-fails).
-
-- An operation is performed in an asynchronous manner without propagating the `ThreadContext`.
-  See [Running Asynchronous Operations](features/multi-tenancy/thread-context#running-asynchronous-operations).
+- There was no JWT in the authorization header.
 
 - The SAP Cloud SDK components are not registered as listeners on incoming requests.
   See [Framework Support](getting-started#framework-integration).
 
-- There was no JWT in the authorization header.
+- An operation is performed in an asynchronous manner without propagating the `ThreadContext`.
+  See [Running Asynchronous Operations](features/multi-tenancy/thread-context#running-asynchronous-operations).
 
 - A BAPI/RFC call was attempted while using resilience or multithreading capabilities of the SAP Cloud SDK.
   See [Subscriber Tenant Is Not Found at Runtime](features/bapi-and-rfc/overview#subscriber-tenant-is-not-found-at-runtime)
@@ -61,17 +58,6 @@ Destinations are returned only for the provider account, but not for a subscribe
 - The SAP Cloud SDK defaults back to the provider account if no tenant information is available.
   See the above section on [Tenant or Principal not available](#tenant-or-principal-not-available).
 
-## JSON Web Token Validation Fails
-
-:::info **Symptoms:**
-Logs show JWT validation exceptions, Tenant information is not available.
-:::
-
-**Possible causes:**
-
-- The SAP Cloud SDK version might be outdated.
-  Check with the [latest SAP Cloud SDK version](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom).
-
 ## Connecting to an ERP System fails
 
 :::info **Symptoms:**
@@ -80,10 +66,10 @@ The ERP system unexpectedly responds with _401: Unauthorized_ or _403: Forbidden
 
 **Possible causes:**
 
-- The SAP Client and Locale headers will be missing if the `Destination` is not an `ErpHttpDestination`.
+- The SAP Client and Locale headers will be missing if the properties `sap-client` and `sap-locale` are not defined.
   See [Connecting to SAP S/4HANA](features/connectivity/destination-service#connect-to-on-premise-s4hana-system).
 
-## Compilation Failures in the Generated OData Virtual Data Model Classes
+## Compilation Failures in the Generated OData Classes
 
 :::info **Symptoms:**
 Compilation fails due to missing _Getters_ and _Setters_ on entity objects.
@@ -92,7 +78,7 @@ Compilation fails due to missing _Getters_ and _Setters_ on entity objects.
 **Possible causes:**
 
 - Getters and Setters will be missing if [Lombok](https://projectlombok.org/) is not present in the dependency tree of your project.
-  See [Using the OData Generator](http://localhost:3000/cloud-sdk/docs/java/features/odata/vdm-generator#using-the-odata-generator).
+  See [Using the OData Generator](features/odata/vdm-generator#using-the-odata-generator).
 - Getters and Setters will be shown red if your IDE does not support Lombok. Hence, install the Lombok plugin for your IDE.
   - For IntelliJ, install [the Lombok plugin](https://plugins.jetbrains.com/plugin/6317-lombok).
   - For Eclipse, follow [this guide](https://projectlombok.org/setup/eclipse).
@@ -126,20 +112,6 @@ Compilation fails due to missing _Getters_ and _Setters_ on entity objects.
   Please check the latest details about [SAP BTP, Cloud Foundry Environment quotas and limitations](https://help.sap.com/viewer/3504ec5ef16548778610c7e89cc0eac3/Cloud/en-US/9c7092c7b7ae4d49bc8ae35fdd0e0b18.html#loio9809fa4f02cb4696baea5c23d6eaac94)
 - If even after achieving the maximum vertical scale of your instance, your app doesn't reach the desired performance level, try to optimize it.
   Consider scaling it horizontally or different custom solutions to boost performance where it lags.
-
-## Request via Cloud Connector Fails with HTTP 407
-
-:::info **Symptoms**
-In your application log you find the HTTP error code 407 and the request targets an On-Premise system via the SAP Cloud Connector.
-:::
-
-**Possible causes:**
-
-- You are caching the `HttpDestination` instance in your application code instead of retrieving it for each request.
-  Since the `HttpDestination` object stores the JWT needed for passing the SAP Cloud Connector, the JWT does not get refreshed after its expiration.
-
-  To solve this issue, retrieve the `HttpDestination` for each request again with the `DestinationAccessor` API.
-  There is no need to worry about performance, because the SAP Cloud SDK uses an optimized built-in cache for Destinations.
 
 ## `No Such Method: com.google.gson.JsonParser.parseReader`
 
@@ -182,7 +154,7 @@ Your OData request returns with a 400 (bad request) or 500 (server error) HTTP c
 - The SAP Cloud SDK may send an incorrect OData request.
 
   Verify that the request the SAP Cloud SDK sends out ([looking at HTTP logs](./guides/logging-overview)) does not conform to the [OData documentation](https://www.odata.org/documentation/).
-  In that case please [raise an issue on our GitHub](https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=Java&template=sap-cloud-sdk-for-java-issue.md&title=).
+  In that case please [raise an issue on our GitHub](https://github.com/SAP/cloud-sdk-java/issues).
 
   In addition, you can leverage the [low-level generic OData client](./features/odata/generic-untyped-odata-client) which gives you more flexibility to adapt requests to overcome potential issues with the typed APIs.
 
@@ -196,7 +168,7 @@ While generating a type-safe API client for an OData service, you encounter the 
 
 - The service specification (`EDMX` file) contains an entity that is named `Type`, `Type_`, or just `_`.
 
-  By default, both the OData V2 and V4 VDM generators use the `S4HanaNamingStrategy` to generate valid Java names from the given service specification.
+  By default, both the OData v2 and v4 VDM generators use the `S4HanaNamingStrategy` to generate valid Java names from the given service specification.
   Hereby, it removes pre- and suffixes that are commonly used in SAP service specifications, such as the suffixes `Type` and `_` for entities.
   In special cases, where an entity name consist of those suffixes only, that logic leads to the generation of an empty class name, which, in turn, then results in the observed exception.
 
@@ -206,7 +178,7 @@ While generating a type-safe API client for an OData service, you encounter the 
 ## `DestinationAccessException: Failed to read authentication token. The destination service responded with an error: Could not verify the provided CSRF token because your session was not found`
 
 :::info **Symptoms**
-When running `Destination#asHttp()` you encounter an exception message like `"DestinationAccessException: Failed to read authentication token. The destination service responded with an error: Could not verify the provided CSRF token because your session was not found"`.
+When using a `Destination` you encounter an exception message like `"DestinationAccessException: Failed to read authentication token. The destination service responded with an error: Could not verify the provided CSRF token because your session was not found"`.
 :::
 
 **Possible causes:**
@@ -234,51 +206,55 @@ You may experience the follow-up error message: `"ODataConnectionException: Conn
   However, if you require a quick solution for your local development environmment, you can add a special flag to your `"destinations"` environment variable: `"TrustAll" : "true"`.
   This will disable the certificate validation on your local runtime.
 
-## `More than 1 Custom HttpClientFactory service provider found. There should be only one`
+## `DefaultHttpClientFactory not a subtype` Error
 
-An implementation of the `HttpClientFactory` is already provided by SAP Cloud SDK.
-
-1. Check if your implementation is needed.
-   Your application should be working without providing any `HttpClientFactory`.
-2. If you are implementing a missing feature, implement instead `com.sap.cloud.sdk.cloudplatform.connectivity.HttpClientFactory` and provide it to `HttpClientAccessor.setHttpClientFactory()`
-3. If the second step is not an option, the existing `HttpClientFactory` can be removed before the application starts:
-
-<details>
-        <summary>Example: Remove HttpClientFactory</summary>
-<Tabs groupId="archetype" defaultValue="tomee" values={[ { label: 'TomEE', value: 'tomee', }, { label: 'Spring', value: 'spring', }]}>
-
-<TabItem value="tomee">
+:::info **Symptoms**
+Applications that rely on the SAP Java Buildpack, which is always true for application that require JCo, may throw the following exception when trying to access a RFC destination:
 
 ```java
-@WebListener
-public class Config implements ServletContextListener {
-
-  public void contextInitialized(ServletContextEvent event) {
-    HttpClientFactory.services.clear();
-    HttpClientFactory.services.add(new MyHttpClientFactory());
-  }
-}
-
+java.util.ServiceConfigurationError: com.sap.cloud.security.client.HttpClientFactory: com.sap.cloud.security.client.DefaultHttpClientFactory not a subtype
 ```
 
-</TabItem>
-<TabItem value="spring">
+:::
 
-```java
-@SpringBootApplication
-public class Application extends SpringBootServletInitializer {
+**Possible causes:**
 
-  @Override
-  protected SpringApplicationBuilder configure(
-    final SpringApplicationBuilder application
-  ) {
-    HttpClientFactory.services.clear();
-    HttpClientFactory.services.add(new MyHttpClientFactory());
-  }
-}
+- This issue is typically caused by a dependency scope conflict and can be solved by following [our guidance](./guides/manage-dependencies#avoiding-scope-conflicts).
 
-```
+## Incoming Requests Fail Because a Request Header is Too Large
 
-</TabItem>
-</Tabs>
-</details>
+:::info **Symptoms**
+Your app is responding with 400 codes and you see a log entry `Request header is too large`.
+:::
+
+**Possible causes:**
+
+- In some cases you may need to configure your app/server to accept larger request headers.
+  Refer to [this guide](https://www.baeldung.com/spring-boot-max-http-header-size#overview-1) on how to achieve this for Spring based applications.
+  In case you are deploying a WAR file with the SAP Java Buildpack refer to [this documentation](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/79c039ab43b946a7b50c5d0326a3b40b.html#customizing-the-sap-java-buildpack-defaults).
+
+## Destination Lookup Fails Because a Request Field is Too Large
+
+:::info **Symptoms**
+When your application tries to fetch a destination, for some of the users you see: `Destination service returned HTTP status 431 (Request Header Fields Too Large)`.
+:::
+
+**Possible causes:**
+
+- The SAP Cloud SDK’s default `FORWARD_USER_TOKEN` strategy forwards the _entire_ token, including all group claims, in the `Authorization` header when performing a destination lookup.
+  If the token is too large, it can exceed the platform’s header size limit and trigger an HTTP 431 error.
+
+  You may try out other strategies, such as the now-deprecated `LOOKUP_THEN_EXCHANGE` which can appropriately exchange the token for a more compact one at the cost of performance overhead.
+
+## Token Retrieval Fails with `401`
+
+:::info **Symptoms**
+While requesting authentication tokens for destination or connectivity, an error message containing `Http status code 401` and/or `Bad Credentials` is thrown.
+:::
+
+**Possible Causes**
+
+- You might have not configured your SaaS dependencies correctly.
+  Most likely, one of your dependencies is missing.
+  For more information on how to configure your SaaS registry, please refer to one of the following guides: [for applications not using DwC or IAS](https://help.sap.com/docs/btp/sap-business-technology-platform/register-multitenant-application-to-sap-saas-provisioning-service), [for DwC users](https://pages.github.tools.sap/deploy-with-confidence/solar-system/configuration/landscape-configuration/orbits-directory/?#saas-registry-configuration), [for IAS-based applications](https://int.controlcenter.ondemand.com/index.html#/knowledge_center/articles/7961284168e848efb9e0462e38b4075d)(SAP internal).
+- If your SaaS dependencies are set up correctly and you still get the above error, make sure that your service binding credentials are valid.

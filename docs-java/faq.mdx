@@ -19,8 +19,8 @@ keywords:
 ### How Often Do You Release a New SAP Cloud SDK Version?
 
 We release a [minor version](release-policy.mdx#minor-release-schedule) every two weeks.
-All the features that are _Generally Available_ or _Beta_ get into the next [release](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom).
-You can find the latest SAP Cloud SDK version and the list of previous releases [here](release-notes.mdx) or on [Maven Central](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom).
+All the features that are _Generally Available_ or _Beta_ get into the next [release](https://central.sonatype.com/artifact/com.sap.cloud.sdk/sdk-bom).
+You can find the latest SAP Cloud SDK version and the list of previous releases [here](release-notes.mdx) or on [Maven Central](https://central.sonatype.com/artifact/com.sap.cloud.sdk/sdk-bom).
 Find more details in our [release policy](release-policy.mdx).
 
 ### Should I Update With Every Release?
@@ -32,10 +32,9 @@ Be cautious about using features annotated as _Beta_ because their API can chang
 
 ### Which Java Versions Are Supported by the SAP Cloud SDK?
 
-The SAP Cloud SDK itself is compatible with Java 8 and 11.
-Other Java versions may work as well, depending on your setup, but are not yet tested by us.
-Note that the SAP Business Technology Platform Cloud Foundry environment only supports Java 8 out of the box, but can be configured to also run with Java 11.
-SAP Business Technology Platform Neo only supports Java 8.
+The SAP Cloud SDK is compatible with Java 17 Long-Term-Support (LTS).
+Newer Java versions may work as well depending on your setup but are not yet tested by us.
+Note that the SAP Business Technology Platform Cloud Foundry environment can be configured to run with Java 17.
 
 ### Can I Use Features Annotated as Beta in Production?
 
@@ -45,22 +44,17 @@ You can use these features to test new functionality, provide us feedback, and p
 
 ### I Think I Found a Bug in the SAP Cloud SDK, What Should I Do?
 
-Please, report it to us via any available channel.
-The preferred support channel is [Stack Overflow](https://stackoverflow.com/questions/tagged/sap-cloud-sdk).
-You can also create an issue on the SAP Cloud SDK external GitHub repository or use the internal one if you're the SAP employee.
-
-### I'm Creating a Service Now Incident, What's Your Component Name?
-
-Choose `XX-S4C-SDK` if you are reporting an issue via Service Now.
+The SAP Cloud SDK for Java is an open source project.
+In case you found a bug or opportunity for improvement you can directly open an issue or pull request in the [SAP Cloud SDK GitHub repository](https://github.com/SAP/cloud-sdk-java).
 
 ### How Do I Remotely Debug My App on SAP BTP Cloud Foundry?
 
 Use these CF CLI instructions to activate debugging for your App.
 
-**TomEE (when using SAP Java Buildpack)**
+**Tomcat (when using SAP Java Buildpack Jakarta)**
 
 ```bash
-cf ssh application -c "app/META-INF/.sap_java_buildpack/sapjvm/bin/jvmmon <<< 'start debugging'"
+cf ssh application -c 'export JAVA_PID=`ps -C java -o pid=` && /home/vcap/app/META-INF/.sap_java_buildpack/sap_machine_jre/bin/jcmd $JAVA_PID VM.start_java_debugging'
 cf ssh application -N -T -L 8000:localhost:8000
 ```
 
@@ -82,24 +76,6 @@ We strongly discourage users from running productive applications in debug mode!
 
 :::
 
-### I'm Observing a `DefaultHttpClientFactory not a subtype` Exception
-
-Application that rely on the SAP Java Buildpack, which is always true for application that require JCo, may throw the following exception when trying to access a RFC destination:
-
-```java
-java.util.ServiceConfigurationError: com.sap.cloud.security.client.HttpClientFactory: com.sap.cloud.security.client.DefaultHttpClientFactory not a subtype
-```
-
-This issue is caused by a dependency scope conflict and can be solved by following [our guidance](./guides/manage-dependencies#avoiding-scope-conflicts).
-
-### Incoming Requests Fail Because a Request Header is Too Large
-
-In some cases you may need to configure your app/server to accept larger request headers.
-If your app is responding with 400 codes and you see a log entry `Request header is too large` make sure to increase the header size limit.
-
-Refer to [this guide](https://www.baeldung.com/spring-boot-max-http-header-size#overview-1) on how to achieve this for Spring based applications.
-In case you are deploying a WAR file with the SAP Java Buildpack refer to [this documentation](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/79c039ab43b946a7b50c5d0326a3b40b.html#customizing-the-sap-java-buildpack-defaults).
-
 ## OData Related Questions
 
 ### What Versions of OData Protocol Do You Support?
@@ -119,82 +95,7 @@ If you need a feature that is not yet supported by SAP Cloud SDK, please make a 
 You may see some errors while developing.
 These errors are not always caused by flaws in the SAP Cloud SDK as we often see inconsistent OData protocol handling by different services.
 Some of them even have known flaws for which we have workarounds.
-If you can't solve your issue via debugging and experimenting, please, report your incident via [Stack Overflow](https://stackoverflow.com/questions/tagged/sap-cloud-sdk) or our GitHub repositories.
-
-### How To Use the OData Attachment Service?
-
-You are trying to use the virtual data model for [AttachmentService](https://api.sap.com/api/API_CV_ATTACHMENT_SRV/overview) as provided by the SAP Cloud SDK.
-However, it's impossible to run the request successfully, the attachments will not be uploaded.
-This is caused by an outdated specification, for which the Java classes are automatically generated.
-As a consequence the generated `AttachmentService` interface and `DefaultAttachmentService` implementation cannot be used reliably.
-
-<details>
-  <summary>We recommend running manual requests instead (click to expand).</summary>
-
-<ol>
-  <li>Request CSRF token with HEAD request</li>
-  <li>Upload Attachment with POST request.</li>
-</ol>
-
-```java
-// Resolve HttpClient instance
-HttpDestination destination;
-HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
-
-// Resolve CSRF token, internally runs HEAD request
-String csrfToken = new DefaultCsrfTokenRetriever()
-    .retrieveCsrfToken(httpClient, AttachmentService.DEFAULT_SERVICE_PATH)
-    .getToken();
-
-// Prepare attachment for HTTP request
-InputStream inStream;
-HttpEntity attachmentEntity = new InputStreamEntity(inStream); // alternatively, new FileEntity(File)
-
-// Prepare attachment creation request
-HttpPost create = new HttpPost(AttachmentService.DEFAULT_SERVICE_PATH + "/AttachmentContentSet");
-create.setEntity(attachmentEntity);
-create.setHeader(DefaultCsrfTokenRetriever.X_CSRF_TOKEN_HEADER_KEY, csrfToken);
-create.setHeader("Content-Type", "image/jpeg");
-create.setHeader("Slug", "'filename.jpg'");
-create.setHeader("BusinessObjectTypeName", "'ObjectTypeName'");
-create.setHeader("LinkedSAPObjectKey", "'ObjectKey'");
-
-// Send attachment creation request
-HttpResponse response = httpClient.execute(create);
-
-// Parse response
-String responseText = EntityUtils.toString(response.getEntity());
-```
-
-Once you've decided on `InputStream` or `File` as underlying data type for `HttpEntity`, you need to apply values for HTTP headers:
-
-- `x-csrf-token` - value from previous HEAD request
-- `Content-Type` - value depending on a file type, make sure it is correct
-- `Slug` - value in single-quotes `'`
-- `BusinessObjectTypeName` - value in single-quotes `'`
-- `LinkedSAPObjectKey` - value in single-quotes `'`.
-
-Please note, depending on the file size, a request may take several seconds to minutes.
-This suggested HTTP interaction is the [officially documented](https://help.sap.com/viewer/7489fa08cede494cbdf08fa3651598af/2105.500/en-US/63259b6826174573bc32f2e1d1609cd9.html) approach.
-It's not considered a workaround.
-
-In case you want to deserialize the JSON from `responseTest` variable, then run the following code:
-
-```java
-// Deserialize the AttachmentContent object
-TypeToken<Map<String, AttachmentContent>> responseType = new TypeToken<Map<String, AttachmentContent>>() {
-};
-Map<String, AttachmentContent> responseObject = new Gson().fromJson(responseText, responseType.getType());
-AttachmentContent result = responseObject.get("d");
-```
-
-</details>
-
-:::tip "Provide a correct `Content-Type`"
-
-The `Conten-Type` should correspond to the uploaded file or your upload might fail.
-
-:::
+If you can't solve your issue via debugging and experimenting, please report your incident as a [GitHub Issue](https://github.com/SAP/cloud-sdk-java/issues).
 
 ## Open API Related Questions
 
@@ -203,8 +104,6 @@ The `Conten-Type` should correspond to the uploaded file or your upload might fa
 Yes, we do support [OpenAPI 2.0 also known as Swagger](https://swagger.io/specification/v2/), and [OpenAPI 3.0](https://swagger.io/specification/) specifications.
 The latter is preferred.
 Find documentation how to generate a [type-safe Open API client here](features/rest/generate-rest-client.mdx).
-We also release pregenerated libraries in collaboration with service providers who release RESTful Open API services.
-For details check an [overview](features/rest/overview).
 For feedback or questions about our Open API offering, please, create an issue [here](https://github.com/SAP/cloud-sdk/issues).
 
 ## Questions About SAP Business Technology Platform
@@ -217,10 +116,7 @@ Let us know if you miss functionality of the SAP BTP for the Cloud Foundry envir
 
 ### Do You Support SAP Business Technology Platform - Neo?
 
-We still provide full support for SAP Business Technology Platform Neo.
-However, we do not recommend starting new projects with SAP BTP for the Neo environment.
-The Cloud Foundry environment is better suited for apps and SAP S/4HANA extension development.
-Also, for Neo we provide out-of-the-box support with only servlet based applications and not spring based applications.
+No, support for SAP Business Technology Platform - Neo ended with the release of version 5.0.0 of the SAP Cloud SDK.
 
 ### Do You Support Reactive Spring Technology, e.g. Webflux?
 
@@ -238,11 +134,11 @@ That is why the SAP Cloud SDK for Java itself does not render your application b
 
 However, you should still check that your application or one of its dependencies doesn't include `log4j-core` on the classpath.
 
-Our SAP BTP CF Archetypes use logback as the logging implementation, the SAP BTP Neo archetype relies on the logger provided by the Neo Platform.
+Our SAP BTP CF Archetype uses logback as the logging implementation.
 
 For further reading on this vulnerability have a look at the following (external) links:
 
-- <https://www.lunasec.io/docs/blog/log4j-zero-day-mitigation-guide/>
-- <http://slf4j.org/log4shell.html>
-- <https://support.sap.com/content/dam/support/en_us/library/ssp/my-support/trust-center/sap-tc-01-5025.pdf>
-- <https://nvd.nist.gov/vuln/detail/CVE-2021-44228>
+- https://www.lunasec.io/docs/blog/log4j-zero-day-mitigation-guide
+- http://slf4j.org/log4shell.html
+- https://support.sap.com/content/dam/support/en_us/library/ssp/my-support/trust-center/sap-tc-01-5025.pdf
+- https://nvd.nist.gov/vuln/detail/CVE-2021-44228

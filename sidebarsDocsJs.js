@@ -25,6 +25,7 @@ module.exports = {
             'features/connectivity/destination-cache',
             'features/connectivity/proxies',
             'features/connectivity/http-client',
+            'features/connectivity/csrf',
             'features/connectivity/on-premise'
           ]
         },
@@ -37,11 +38,7 @@ module.exports = {
             'features/openapi/execute-request'
           ]
         },
-        {
-          type: 'category',
-          label: 'Mail Client',
-          items: ['features/mail-client/mail-client']
-        },
+        'features/middleware',
         'features/error-handling',
         'features/logging',
         'features/eslint-configuration'
@@ -49,16 +46,22 @@ module.exports = {
     },
     {
       type: 'category',
+      label: 'Environments',
+      items: ['environments/kubernetes', 'environments/kyma']
+    },
+    {
+      type: 'category',
       label: 'Guides',
       items: [
-        'guides/kubernetes',
+        'guides/upgrade-to-version-4',
         'guides/bas',
         'guides/browser',
         'guides/trust-and-keystores',
         'guides/approuter',
         'guides/resilience',
         'guides/retrieve-jwt',
-        'guides/remote-debugging'
+        'guides/remote-debugging',
+        'guides/api-business-hub-download-specification'
       ]
     },
     {
@@ -95,6 +98,11 @@ module.exports = {
       type: 'category',
       label: 'Video Tutorials',
       items: ['video/calm']
+    },
+    {
+      type: 'link',
+      label: 'API Reference',
+      href: 'pathname:///api/v4/index.html'
     },
     'release-notes',
     'support',
